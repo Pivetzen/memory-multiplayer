@@ -1,0 +1,230 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #0f2027;
+    background: linear-gradient(to right, #203a43, #0f2027);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 10px;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 480px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 85vh;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1 {
+    text-align: center;
+    margin: 30px 0 15px;
+    color: #f1c40f;
+    font-size: 28px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+p {
+    text-align: center;
+    color: #bdc5cd;
+    margin-bottom: 35px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+input[type="text"] {
+    padding: 16px;
+    border: 2px solid rgba(255,255,255,0.2);
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+    border-radius: 10px;
+    font-size: 16px;
+    outline: none;
+    text-align: center;
+}
+
+input[type="text"]:focus {
+    border-color: #f1c40f;
+}
+
+button {
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    color: white;
+    transition: transform 0.1s, background 0.2s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#btn-join-p1 { background-color: #1e88e5; }
+#btn-join-p2 { background-color: #e53935; }
+
+/* Dashboard superior */
+header {
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 12px;
+    margin-bottom: 15px;
+}
+
+header h2 {
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #f1c40f;
+}
+
+.room-indicator {
+    font-size: 11px;
+    color: #a4b0be;
+    margin-top: 4px;
+}
+
+.scoreboard {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.player-panel {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 4px solid #747d8c;
+    transition: all 0.3s ease;
+}
+
+.p1-panel.active { background: rgba(30, 136, 229, 0.2); border-bottom-color: #1e88e5; }
+.p2-panel.active { background: rgba(229, 57, 53, 0.2); border-bottom-color: #e53935; }
+
+.player-title { font-size: 11px; font-weight: bold; color: #bdc3c7; }
+.player-score { font-size: 18px; font-weight: 800; margin: 4px 0; }
+.player-status { font-size: 11px; font-weight: 600; text-transform: uppercase; }
+
+.turn-announcer {
+    background: rgba(0, 0, 0, 0.2);
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Tabuleiro da Memória (4x4 = 16 cartas) */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 5px;
+    flex: 1;
+}
+
+/* Estrutura 3D das Cartas */
+.card {
+    aspect-ratio: 3 / 4;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-style: perspective-3d;
+}
+
+/* Classes de Estado controladas por JS */
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card.matched {
+    cursor: default;
+    pointer-events: none;
+}
+
+.card.matched .card-front {
+    background: rgba(46, 213, 115, 0.2);
+    border-color: #2ed573;
+    animation: pulseMatch 0.5s ease-in-out;
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255,255,255,0.1);
+}
+
+/* Verso da Carta (Escondido) */
+.card-back {
+    background: #1c2d37;
+    background-image: radial-gradient(#2c3e50 20%, transparent 20%), radial-gradient(#2c3e50 20%, transparent 20%);
+    background-size: 10px 10px;
+    background-position: 0 0, 5px 5px;
+    color: #f1c40f;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Frente da Carta (Bandeira Revelada) */
+.card-front {
+    background: #ffffff;
+    transform: rotateY(180deg);
+    font-size: 40px; /* Tamanho do emoji da bandeira */
+}
+
+@keyframes pulseMatch {
+    0% { transform: rotateY(180deg) scale(1); }
+    50% { transform: rotateY(180deg) scale(1.08); }
+    100% { transform: rotateY(180deg) scale(1); }
+}
